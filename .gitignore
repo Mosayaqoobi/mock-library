@@ -1,0 +1,59 @@
+# ===============================
+# Node / Backend
+# ===============================
+
+# Node modules
+/backend/node_modules/
+
+# Logs
+/backend/npm-debug.log*
+/backend/yarn-debug.log*
+/backend/yarn-error.log*
+
+# Environment variables
+/backend/.env
+
+# Build output (if using TypeScript or bundlers)
+/backend/dist
+/backend/build
+
+# ===============================
+# React / Frontend
+# ===============================
+
+# Node modules
+/frontend/node_modules/
+
+# React build output
+/frontend/build
+
+# Local env files
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+/frontend/.env
+
+# ===============================
+# OS / IDE files
+# ===============================
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# JetBrains
+.idea/
+
+# ===============================
+# Miscellaneous
+# ===============================
+
+# Log / temp files
+*.log
+*.tmp
+*.swp
+
+.csv
