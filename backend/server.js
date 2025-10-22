@@ -15,7 +15,7 @@ const app  = express();
 app.use(express.json());
 
 //all the routes from authRoutes
-app.user("/api/auth", authRoutes) 
+app.use("/api/auth", authRoutes) 
 
 connectDB();    //connects and starts the mongoDB
 
