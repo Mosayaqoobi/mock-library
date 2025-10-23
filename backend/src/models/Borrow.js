@@ -11,11 +11,6 @@ const borrowSchema = mongoose.Schema({
         required: true,
         ref: "Book"
     },
-    borrowedAt: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Date.now,
-        type: Date
-    },
     dueDate: {
         type: Date,
         required: true
@@ -26,8 +21,8 @@ const borrowSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ["Active", "Returned", "overdue"],
-        default: "active"
+        enum: ["using", "returned", "overdue"],
+        default: "using"
     },
     renew: {
         type: Number,
@@ -46,8 +41,8 @@ borrowSchema.virtual("isOverdue").get(function() {
     return this.status === "active" && new Date() > this.dueDate;
 })
 //method to calculate due date (14 days from borrowedAt)
-borrowSchema.methods.calculateDueDate = function() {
-    const dueDate = new Date(this.borrowedAt);
+borrowSchema.methods.calculateDueDate = function(fromDate = null) {
+    const dueDate = formDate ? new Date(fromDate) : newDate(this.createdAt);
     dueDate.setDate(dueDate.getDate() + 14);
     return dueDate;
 };

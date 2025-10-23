@@ -21,10 +21,16 @@ app.use("/api/auth", authRoutes)
 //all book routes from bookroutes
 app.use("/api/books", bookRoutes)
 //all user routes from userroutes
-app.use("/api/user", userRoutes)
+app.use("/api/users", userRoutes)
 
-connectDB();    //connects and starts the mongoDB
+//dont connect to db if we are testing (tests connect to mock db)
+if (process.env.NODE_ENV !== "test") {
+    //connects and starts the mongoDB
+    connectDB();
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    }); 
+}  
+
+export default app;
