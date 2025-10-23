@@ -66,7 +66,7 @@ export default function Login({setUser}) {
             color="primary"
             sx={{ cursor: 'pointer', fontWeight: 'bold' }}
           >
-            Sign Up
+            Register
           </Typography>
         </Typography>
       </Paper>
