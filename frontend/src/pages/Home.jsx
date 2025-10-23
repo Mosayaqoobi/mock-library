@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Home = ( {user, error} ) => {
+const Home = ( { user } ) => {
   return (
     <div>{user.username}</div>
   )

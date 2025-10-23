@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from "dotenv";
 import { connectDB } from './src/config/db.js';
 import authRoutes from "./src/routes/authRoutes.js";
+import bookRoutes from "./src/routes/bookRoutes.js";
+import userRoutes from "./src/routes/userRoutes.js";
 
 //congifures the env to grab variables
 dotenv.config()
@@ -16,6 +18,10 @@ app.use(express.json());
 
 //all the routes from authRoutes
 app.use("/api/auth", authRoutes) 
+//all book routes from bookroutes
+app.use("/api/books", bookRoutes)
+//all user routes from userroutes
+app.use("/api/user", userRoutes)
 
 connectDB();    //connects and starts the mongoDB
 
