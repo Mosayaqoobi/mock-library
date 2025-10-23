@@ -57,3 +57,4 @@
 *.swp
 
 *.csv
+node_modules
