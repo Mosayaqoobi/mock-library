@@ -1,5 +1,5 @@
 //this will be where the functions for the login, register, and me routes goes
-import User from "../models/User";
+import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
 const generateToken = (id) => {

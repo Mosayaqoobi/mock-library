@@ -1,6 +1,8 @@
 //resuable test setup code (DB setup, test data, helper functions)
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import request from "supertest";
+import app from "../../server.js";
 
 let mongoServer;
 
@@ -26,9 +28,9 @@ export const setupTestDB = async() => {
 
 //clear all the collections in the db
 export const clearTestDB = async() => {
-    const collections = mongoose.connect.collections;
+    const collections = mongoose.connection.collections;
     for (const key in collections) {
-        await collections[key].deletemMany({});
+        await collections[key].deleteMany({});
     }
 };
 //disconnect the mongoDB memory server
@@ -40,5 +42,12 @@ export const teardownTestDB = async() => {
         await mongoServer.stop();
     }
 };
+//makes a request to make an account, and returns the token for valid access to the website
+export const accountTestDB = async() => {
+    const res =  await request(app)
+    .post("/api/auth/register")
+    .send(testUserData)
+    return res.body.token;
+}
 
 

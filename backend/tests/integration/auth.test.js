@@ -1,28 +1,19 @@
 //this file will run tests for login and register
 
 import request from "supertest";
-import mongoose from "mongoose";
 import app from "../../server.js";
-import { MongoMemoryServer } from "mongodb-memory-server";
-
-let mongoServer;
+import { teardownTestDB, setupTestDB } from "../helpers/testSetup.js";
 
 describe("Auth Tests", () => {
 
     //create a in-memory mongoDB
     beforeAll(async() => {
-        //create the db
-        mongoServer = await MongoMemoryServer.create();
-        //get connection
-        const mongoUri = mongoServer.getUri();
-        //connect to the connection
-        await mongoose.connect(mongoUri)
+        await setupTestDB();
     })
 
     //after all the tests, close the db connection
     afterAll(async () => {
-        await mongoose.connection.close();
-        await mongoServer.stop();
+        await teardownTestDB();
     });
 
     //register a new user

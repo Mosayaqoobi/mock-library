@@ -30,7 +30,7 @@ export const getBookById = async(req, res) => {
 // "/books/search?q=xyz&genre=w&minrating=i"
 export const searchBooks = async(req, res) => {
     try {
-        const { q, genre, rating, author } = req.query;
+        const { q, genre, rating, limit } = req.query;
 
         //search filter
         let filter = {};
@@ -43,7 +43,7 @@ export const searchBooks = async(req, res) => {
         if (rating) filter.rating = {$gte: parseFloat(rating) };
 
         //get the books from the filters
-        const books = await Book.find(filter).limit(50).sort({rating: -1});
+        const books = await Book.find(filter).limit(limit).sort({rating: -1});
         //send status code 200 for success
         res.status(200).json({results: books, count: books.length});
     } catch (error) {
