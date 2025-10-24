@@ -12,11 +12,11 @@ export const testUserData = {
     password: "pass1"
 };
 export const testBookData = {
-    title: "test",
-    coverimg: "http://test",
-    details: "test description",
-    genres: ["horror", "romance"],
-    rating: 4.95,
+    title: "Harry Potter",
+    coverimg: "http://example.com/hp.jpg",
+    details: "A wizard story",
+    genres: ["Fantasy", "Adventure"],
+    rating: 4.5
 };
 
 //connect to mongoDB sever
@@ -46,7 +46,7 @@ export const teardownTestDB = async() => {
 export const accountTestDB = async() => {
     const res =  await request(app)
     .post("/api/auth/register")
-    .send(testUserData)
+    .send(testUserData);
     return res.body.token;
 }
 

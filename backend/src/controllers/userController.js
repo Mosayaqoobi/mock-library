@@ -25,7 +25,7 @@ export const updateProfile = async(req, res) => {
         
     //show any other error
     } catch (error) {
-        console.log("Update Failed:", error);
+        console.error("Update Failed:", error);
         res.status(500).json({message: "Update failed"});
     }
 }
@@ -36,7 +36,7 @@ export const deleteProfile = async(req, res) => {
         await User.findByIdAndDelete(req.user._id);
         res.status(200).json({message: "Account deleted successfully"});
     } catch (error) {
-        console.log("Deletion Failed:", error);
+        console.error("Deletion Failed:", error);
         res.status(500).json({message: "server Error"})
     }
 }

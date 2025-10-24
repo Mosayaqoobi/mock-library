@@ -13,9 +13,14 @@ export const getBookById = async(req, res) => {
         //if it doesnt exist, send 500 code, with error
         if (!book) return res.status(404).json({message: "Book not found"});
         //get the borrow information for this book, to display
-        const activeBorrow = await Borrow.findOne({bookId: id, status:'active'}).populate('userId', 'username');
-        //send 200 code, with the book object, and if its avilable. if not, whos borrowing, and its dueDate
+        const activeBorrow = await Borrow.findOne({bookId: id, status:"active"}).populate("userId", "username");
+        // send 200 code
+        // book object
+        // if its avilable
+        // if not, whos borrowing
+        // dueDate
         res.status(200).json({
+
         ...book.toObject(),
         isAvailable: !activeBorrow,
         borrowedBy: activeBorrow ? activeBorrow.userId : null,

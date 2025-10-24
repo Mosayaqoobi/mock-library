@@ -27,7 +27,7 @@ describe("Auth Tests", () => {
         });
 
         if (res.statusCode !== 201) {
-            console.log("Error response:", res.body);
+            console.error("Error response:", res.body);
         }
         //check the status code
         expect(res.statusCode).toBe(201);
