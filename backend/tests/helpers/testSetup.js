@@ -18,6 +18,12 @@ export const testBookData = {
     genres: ["Fantasy", "Adventure"],
     rating: 4.5
 };
+export const testNewUserData = {
+    newUsername: "newUsername",
+    newPassword: "newPassword",
+    confirmNewPassword: "newPassword",
+    confirmOldPassword: testUserData.password,
+};
 
 //connect to mongoDB sever
 export const setupTestDB = async() => {
