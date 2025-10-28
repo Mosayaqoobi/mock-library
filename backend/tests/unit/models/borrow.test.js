@@ -40,13 +40,12 @@ describe("Borrow Model", () => {
             expect(borrow.userId).toBe(testUser._id);
             expect(borrow.bookId).toBe(testBook._id);
             expect(borrow.dueDate).toBe(dueDate);
-            expect(borrow.status).toBe("using");
             expect(borrow.renew).toBe(0);
             expect(borrow.returnedAt).toBeNull();
             expect(borrow.createdAt).toBeDefined();
             expect(borrow.updatedAt).toBeDefined();
-        })
-    })
+        });
+    });
 
 
 });

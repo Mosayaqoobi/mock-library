@@ -22,6 +22,11 @@ const bookSchema = new mongoose.Schema({
         max: 5,
         default: 0
     },
+    status: {
+        type: String,
+        enum: ["available", "borrowed"],
+        default: "available",
+    },
 }, 
     {
     timestamps: true
