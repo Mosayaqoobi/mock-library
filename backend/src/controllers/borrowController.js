@@ -103,14 +103,21 @@ export const renewABook = async(req, res) => {
         if (!borrow) return res.status(404).json({message: "no active borrow found"});
     
         if (borrow.renew >= 3) return res.status(400).json({message: "book has been renewed max number of times. Must return first, then borrow it again"});
+
+        // Only allow renewal within 3 days of due date
+        const daysUntilDue = Math.ceil((borrow.dueDate - new Date()) / (1000 * 60 * 60 * 24));
+        if (daysUntilDue > 3) {
+            return res.status(400).json({message: "Can only renew within 3 days of due date"});
+        }
     
         borrow.dueDate = new Date(borrow.dueDate);
-        borrow.dueDate.setDate(borrow.dueDate() + 14);
+        borrow.dueDate.setDate(borrow.dueDate.getDate() + 14);
         
         borrow.renew += 1;
         await borrow.save();
     
-        res.status(200).json({message: "book has been successfully renewed"});    
+        res.status(200).json({message: "book has been successfully renewed", borrow});    
+        
     } catch (error) {
         console.log("renew failed", error);
         res.status(500).json({message: "renew failed"});
