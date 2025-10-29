@@ -2,25 +2,16 @@
 
 import request from "supertest";
 import app from "../../../server.js";
-import { clearTestDB, setupTestDB, teardownTestDB, testUserData, accountTestDB } from "../../helpers/testSetup.js";
+import { clearTestDB, accountTestDB } from "../../helpers/testSetup.js";
 
 
 describe("Authenticaiton middleware", () => {
     let token;
 
-    beforeAll(async() => {
-        await setupTestDB();
-    });
-    afterAll(async() => {
-        await teardownTestDB();
-    });
-
     beforeEach(async() => {
+        await clearTestDB();
         token = await accountTestDB();
     });
-    afterEach(async() => {
-        await clearTestDB();
-    })
 
     describe("protect middleware integration", () => {
         it("allow access including valid token", async() => {

@@ -51,8 +51,8 @@ export const teardownTestDB = async() => {
 //makes a request to make an account, and returns the token for valid access to the website
 export const accountTestDB = async() => {
     const res =  await request(app)
-    .post("/api/auth/register")
-    .send(testUserData);
+        .post("/api/auth/register")
+        .send(testUserData);
     return res.body.token;
 }
 

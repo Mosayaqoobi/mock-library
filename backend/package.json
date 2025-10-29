@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node server.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --forceExit"
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest tests/all.test.js --detectOpenHandles --forceExit",
+    "test:individual": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --forceExit"
   },
   "type": "module",
   "keywords": [
@@ -42,6 +43,8 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "transform": {}
+    "transform": {},
+    "maxWorkers": "50%",
+    "testTimeout": 30000
   }
 }

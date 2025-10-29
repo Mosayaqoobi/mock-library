@@ -3,17 +3,11 @@
 import request from "supertest";
 import User from "../../src/models/User.js";
 import app from "../../server.js";
-import { teardownTestDB, setupTestDB, testUserData, clearTestDB, accountTestDB, testNewUserData } from "../helpers/testSetup";
+import { clearTestDB, accountTestDB, testNewUserData } from "../helpers/testSetup";
 
 describe("Users Test's", () => {
     let token;
 
-    beforeAll(async() => {
-        await setupTestDB();
-    });
-    afterAll(async() => {
-        await teardownTestDB();
-    });
     beforeEach(async() => {
         await clearTestDB();
         token = await accountTestDB();
@@ -29,7 +23,7 @@ describe("Users Test's", () => {
         //test status code
         expect(res.statusCode).toBe(200);
 
-        expect(res.body.username).toBe(testNewUserData.username);
+        expect(res.body.user.username).toBe(testNewUserData.newUsername);
         });
     })
 

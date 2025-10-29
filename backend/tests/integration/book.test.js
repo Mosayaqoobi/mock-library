@@ -2,22 +2,17 @@
 
 import request from "supertest";
 import app from "../../server.js";
-import { teardownTestDB, setupTestDB, clearTestDB, accountTestDB, testBookData } from "../helpers/testSetup.js";
+import { clearTestDB, accountTestDB, testBookData } from "../helpers/testSetup.js";
 import Book from "../../src/models/Book.js";
 
 describe("Book Tests", () => {
     let token;
 
-    beforeAll(async() => {
-        await setupTestDB();
-    });
-    afterAll(async() => {
-        await teardownTestDB();
-    });
     beforeEach(async() => {
         await clearTestDB();
         token = await accountTestDB();
-    })
+    });
+    
     describe("test book Search for valid users", () => {
         it("return 5 books", async() => {
             //send a request, with the credentials, and make a book object

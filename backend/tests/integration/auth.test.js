@@ -2,18 +2,12 @@
 
 import request from "supertest";
 import app from "../../server.js";
-import { teardownTestDB, setupTestDB } from "../helpers/testSetup.js";
+import { clearTestDB } from "../helpers/testSetup.js";
 
 describe("Auth Tests", () => {
 
-    //create a in-memory mongoDB
-    beforeAll(async() => {
-        await setupTestDB();
-    })
-
-    //after all the tests, close the db connection
-    afterAll(async () => {
-        await teardownTestDB();
+    beforeEach(async() => {
+        await clearTestDB();
     });
 
     //register a new user
@@ -38,12 +32,12 @@ describe("Auth Tests", () => {
     //login a user
     it("should login an existing user", async () => {
         await request(app)
-        .post("/api/auth/register")
-        .send({
+            .post("/api/auth/register")
+            .send({
             username: "login",
             email: "log@log.com",
             password: "pass",
-        });
+            });
 
         //login with the same credentials
         const res = await request(app)

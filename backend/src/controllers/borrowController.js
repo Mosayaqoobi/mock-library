@@ -1,28 +1,20 @@
 //functions for the routes of borrowing a book
-
-import User from "../models/User.js";
-import Borrow from "../models/Borrow.js";
-import Book from "../models/Book.js";
-import { protect } from "../middleware/auth.js";
-import express from "express";
+import Book from "../../src/models/Book.js";
+import Borrow from "../../src/models/Borrow.js"; 
+import User from "../../src/models/User.js";
 
 //get all the borrowed books from the user (either using or returned)
-export const getUserBorrowedBooks = async(req, res) => {
+export const getAllBorrowedBooksByUser = async(req, res) => {
     try {
-        const user = await User.findById(req.user._id);
+        const userId = req.user._id;
+
         const { status } = req.query;
-
-        if (!user) return res.status(404).json({message: "user not found"});
-
-        let query = {userId: user._id};
+        let query = {userId: userId};
 
         if (status === "using") query.returnedAt = null;
         if (status === "returned") query.returnedAt = { $ne: null };
 
-        const borrowedBooks = await Borrow.find(
-            query,
-        ).populate("bookId", "title coverimg details genres rating")
-        .sort({createdAt: -1}); //get the most recent
+        const borrowedBooks = await Borrow.find(query).sort({createdAt: -1});
 
         res.status(200).json({
             count: borrowedBooks.length,
@@ -30,13 +22,13 @@ export const getUserBorrowedBooks = async(req, res) => {
         });
 
     } catch (error) {
-        console.error("failed to match borrowed book to user");
+        console.error("failed to match borrowed book to user", error);
         res.status(500).json({message: "failed to fetch borrowed books"});
     };
 };
 
 //borrow a book
-export const borrowBook = async(req, res) => {
+export const borrowABook = async(req, res) => {
     try {
         const user = req.user._id;
         const { bookId } = req.body;
@@ -44,7 +36,7 @@ export const borrowBook = async(req, res) => {
 
         //set due date of the book
         const dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() = 14);
+        dueDate.setDate(dueDate.getDate() + 14);
 
         const borrow = new Borrow({
             userId: user._id,
@@ -68,7 +60,7 @@ export const borrowBook = async(req, res) => {
 };
 
 //return a book
-export const returnBook = async(req, res) => {
+export const returnABook = async(req, res) => {
     try {
         const userId = req.user._id;
         const { bookId } = req.body;
@@ -86,7 +78,7 @@ export const returnBook = async(req, res) => {
     
         const book = await Book.findById(bookId);
         if (book) {
-            book.status = "available",
+            book.status = "available";
             await book.save();
         };
     
@@ -96,4 +88,33 @@ export const returnBook = async(req, res) => {
         res.status(500).json({message: "return failed"});
     };
 };
+
+//renew a book the user is currently borrowing, only on the last day
+export const renewABook = async(req, res) => {
+    try {
+        const userId = req.user._id;
+        const { bookId } = req.body;
+    
+        const borrow = await Borrow.findOne({
+            userId,
+            bookId,
+            returnedAt: null,
+        });
+        if (!borrow) return res.status(404).json({message: "no active borrow found"});
+    
+        if (borrow.renew >= 3) return res.status(400).json({message: "book has been renewed max number of times. Must return first, then borrow it again"});
+    
+        borrow.dueDate = new Date(borrow.dueDate);
+        borrow.dueDate.setDate(borrow.dueDate() + 14);
+        
+        borrow.renew += 1;
+        await borrow.save();
+    
+        res.status(200).json({message: "book has been successfully renewed"});    
+    } catch (error) {
+        console.log("renew failed", error);
+        res.status(500).json({message: "renew failed"});
+    };
+
+}
 
