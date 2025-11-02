@@ -19,17 +19,16 @@ const NavBar = ( { user, setUser } ) => {
   return (
     <AppBar position="static" sx={{ backgroundColor: '#1a1a1a' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
+
+      <Button  component={Link} to="/" sx={{ color: 'white', textTransform: 'none', fontSize: '1.1rem' }}>
+          Home
+        </Button>
         
-        <Button  component={Link} to="/" sx={{ color: 'white', textTransform: 'none', fontSize: '1.1rem' }}>
+        <Button  component={Link} to="/search" sx={{ color: 'white', textTransform: 'none', fontSize: '1.1rem' }}>
           Search
         </Button>
 
-
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button component={Link} to="/my-books" startIcon={<MenuBookIcon />} sx={{ color: 'white', textTransform: 'none' }}>
-            My Books
-          </Button>
-          
           <Button component={Link} to="/profile" startIcon={<AccountCircleIcon />} sx={{ color: 'white', textTransform: 'none' }}>
             My Profile
           </Button>

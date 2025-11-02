@@ -5,7 +5,7 @@
 
 import express from "express";
 import { protect } from "../middleware/auth.js";
-import { borrowABook, returnABook, getAllBorrowedBooksByUser, renewABook } from "../controllers/borrowController.js";
+import { borrowABook, returnABook, getAllBorrowedBooksByUser, renewABook, getOverdue } from "../controllers/borrowController.js";
 
 
 const router = express.Router();
@@ -18,5 +18,7 @@ router.post("/", protect, borrowABook);
 router.post("/return", protect, returnABook);
 //renew a book
 router.post("/renew", protect, renewABook);
+//get the borrowings that are overdue
+router.get("/overdue", protect, getOverdue);
 
 export default router;

@@ -30,16 +30,16 @@ export const getAllBorrowedBooksByUser = async(req, res) => {
 //borrow a book
 export const borrowABook = async(req, res) => {
     try {
-        const user = req.user._id;
+        const userId = req.user._id;
         const { bookId } = req.body;
-        if (!user) return res.status(404).json({message: "user not found"});
+        if (!userId) return res.status(404).json({message: "user not found"});
 
         //set due date of the book
         const dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 14);
 
         const borrow = new Borrow({
-            userId: user._id,
+            userId: userId,
             bookId: bookId,
             dueDate: dueDate,
         });
@@ -122,6 +122,27 @@ export const renewABook = async(req, res) => {
         console.log("renew failed", error);
         res.status(500).json({message: "renew failed"});
     };
+};
 
-}
+export const getOverdue = async(req, res) => {
+    try {
+        const userId = req.user._id;
+
+        const now = new Date();
+    
+        const overdue = await Borrow.find({
+            userId: userId,
+            returnedAt: null,
+            dueDate: { $lt: now },
+        }).sort({ dueDate: 1 });
+    
+        res.status(200).json({count: overdue.length, borrowedBooks: overdue});   
+        
+    } catch (error) {
+        console.log("failed getting overdue books:", error);
+        res.status(500).json({message: "failed getting overdue books"});
+    }
+
+};
+
 

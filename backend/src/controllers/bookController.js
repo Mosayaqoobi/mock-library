@@ -1,6 +1,7 @@
 //this will be where the functions for getting books, and etc will be 
 import Book from "../models/Book.js";
 import Borrow from "../models/Borrow.js";
+import User from "../models/User.js";
 
 //"/books/:id"
 export const getBookById = async(req, res) => {
@@ -13,18 +14,47 @@ export const getBookById = async(req, res) => {
         //if it doesnt exist, send 500 code, with error
         if (!book) return res.status(404).json({message: "Book not found"});
         //get the borrow information for this book, to display
-        const activeBorrow = await Borrow.findOne({bookId: id, returnedAt: null}).populate("userId", "username");
+        let activeBorrow = null;
+        try {
+            activeBorrow = await Borrow.findOne({bookId: id, returnedAt: null})
+                .populate("userId", "username");
+        } catch (populateError) {
+            console.error("Error populating borrow:", populateError);
+            // Try without populate as fallback
+            activeBorrow = await Borrow.findOne({bookId: id, returnedAt: null});
+        }
+        
+        // Build response object
+        const bookObject = book.toObject();
+        let borrowedBy = null;
+        
+        if (activeBorrow && activeBorrow.userId) {
+            // Check if populated (has username property) or just ObjectId
+            if (activeBorrow.userId.username) {
+                // Successfully populated
+                borrowedBy = {
+                    _id: activeBorrow.userId._id.toString(),
+                    username: activeBorrow.userId.username
+                };
+            } else {
+                // Not populated, just ObjectId
+                borrowedBy = {
+                    _id: activeBorrow.userId.toString(),
+                    username: 'Unknown'
+                };
+            }
+        }
+        
         // send 200 code
         // book object
         // if its avilable
         // if not, whos borrowing
         // dueDate
         res.status(200).json({
-
-        ...book.toObject(),
-        isAvailable: !activeBorrow,
-        borrowedBy: activeBorrow ? activeBorrow.userId : null,
-        dueDate: activeBorrow ? activeBorrow.dueDate : null
+            ...bookObject,
+            isAvailable: !activeBorrow,
+            borrowedBy: borrowedBy,
+            dueDate: activeBorrow ? activeBorrow.dueDate : null
         });
         //catch server errors
     } catch (error) {

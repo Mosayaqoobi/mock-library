@@ -2,6 +2,7 @@ import request from "supertest";
 import { clearTestDB, accountTestDB, testUserData, testBookData  } from "../helpers/testSetup";
 import Book from "../../src/models/Book";
 import app from "../../server.js";
+import Borrow from "../../src/models/Borrow.js";
 
 
 describe("Borrow tests", () => {
@@ -23,9 +24,8 @@ describe("Borrow tests", () => {
 
             //borrow a book
             expect(res.statusCode).toBe(201);
-
-        })
-    })
+        });
+    });
 
     describe("get all borrowed books by user", () => {
         it("get all borrowed books", async() => {
@@ -98,6 +98,35 @@ describe("Borrow tests", () => {
             expect(res.body.message).toBe("Can only renew within 3 days of due date");
 
             
+        });
+    });
+    describe("get overdue books", () => {
+        it("get overdue books", async() => {
+            const book = await Book.create(testBookData);
+
+            //borrow a book
+            const borrow = await request(app)
+                .post("/api/borrow/")
+                .set("Authorization", `Bearer ${token}`)
+                .send({bookId: book._id});
+
+            expect(borrow.statusCode).toBe(201);
+
+            const borrowRecord = await Borrow.findOne({
+                bookId: book._id,
+                returnedAt: null,
+            });
+
+            borrowRecord.dueDate = new Date();
+            borrowRecord.dueDate.setDate(borrowRecord.dueDate.getDate() - 100);
+            borrowRecord.save();
+            //get the overdue books
+            const res = await request(app)
+                .get("/api/borrow/overdue")
+                .set("Authorization", `Bearer ${token}`);
+
+            expect(res.statusCode).toBe(200);
+            expect(res.body.count).toBe(1);
         });
     });
 });
